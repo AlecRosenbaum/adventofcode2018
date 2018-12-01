@@ -1,9 +1,6 @@
 """
-Day 17 challenge
+Day N challenge
 """
-import re
-
-import attr
 
 
 def solution_part_one(arg):
@@ -15,7 +12,6 @@ def solution_part_one(arg):
         buff.insert((idx % len(buff)) + 1, i)
         idx += 1
 
-
     return buff[(idx + 1) % len(buff)]
 
 
@@ -24,7 +20,6 @@ def solution_part_two(arg):
     buff_len = 1
     pos_zero = 0
     after_zero = None
-
 
     for i in range(1, 50000001):
         # cycle the index
@@ -48,6 +43,7 @@ def solution_part_two(arg):
 
 
 if __name__ == "__main__":
-    problem_input = 367
+    with open("input.txt", "r") as fin:
+        problem_input = fin.read()
     print(solution_part_one(problem_input))
     print(solution_part_two(problem_input))

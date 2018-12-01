@@ -29,6 +29,7 @@ def solution_part_two(arg):
 
     return curr_freq
 
+
 if __name__ == "__main__":
     with open("input.txt", "r") as fin:
         problem_input = fin.read()
