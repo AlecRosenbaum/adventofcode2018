@@ -19,19 +19,22 @@ def print_grid(points, x, y):
 
 
 def solution_part_one(arg):
-    points = [
-        tuple(int(j) for j in i.split(", "))
-        for i in arg.split("\n")
-    ]
+    points = [tuple(int(j) for j in i.split(", ")) for i in arg.split("\n")]
     max_x = max(tuple(zip(*points))[0]) + 1
     max_y = max(tuple(zip(*points))[1]) + 1
 
     closest_points = {}
     for i in range(max_x):
         for j in range(max_y):
-            distances = [(manhattan_distance((i, j), point), idx) for idx, point in enumerate(points)]
+            distances = [
+                (manhattan_distance((i, j), point), idx)
+                for idx, point in enumerate(points)
+            ]
             min_distance = min(distances)
-            if not len([point for dist, point in distances if dist <= min_distance[0]]) > 1:
+            if (
+                not len([point for dist, point in distances if dist <= min_distance[0]])
+                > 1
+            ):
                 closest_points[(i, j)] = min_distance[1]
 
     infinite_points = set()
@@ -50,17 +53,16 @@ def solution_part_one(arg):
 
 
 def solution_part_two(arg, max_distance=10000):
-    points = [
-        tuple(int(j) for j in i.split(", "))
-        for i in arg.split("\n")
-    ]
+    points = [tuple(int(j) for j in i.split(", ")) for i in arg.split("\n")]
     max_x = max(tuple(zip(*points))[0]) + 1
     max_y = max(tuple(zip(*points))[1]) + 1
 
     closest_points_sum = {}
     for i in range(max_x):
         for j in range(max_y):
-            closest_points_sum[(i, j)] = sum([manhattan_distance((i, j), point) for point in points])
+            closest_points_sum[(i, j)] = sum(
+                [manhattan_distance((i, j), point) for point in points]
+            )
 
     return len([i for i in closest_points_sum.values() if i < max_distance])
 
