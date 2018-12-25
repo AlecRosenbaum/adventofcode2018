@@ -3,6 +3,7 @@ Day 4 challenge
 """
 
 import datetime
+import pprint
 import re
 from collections import defaultdict
 from itertools import groupby
@@ -11,6 +12,7 @@ DATETIME_REGEX = re.compile(
     r"\[(?P<year>\d+)-(?P<month>\d+)-(?P<day>\d+) (?P<hour>\d+):(?P<minute>\d+)\] (?P<message>.*)"
 )
 GUARD_BEGINS_REGEX = re.compile(r"Guard #(?P<guard_id>\d+) begins shift")
+PP = pprint.PrettyPrinter(indent=4)
 
 
 def parse_logs(arg):
@@ -52,8 +54,10 @@ def get_occupancy(logs):
         elif log == "falls asleep":
             asleep_since = timestamp
         elif log == "wakes up":
-            for i in range(int((timestamp - asleep_since).seconds/60)):
-                occupancy[(asleep_since + datetime.timedelta(minutes=i)).time()].append(curr_guard)
+            for i in range(int((timestamp - asleep_since).seconds / 60)):
+                occupancy[(asleep_since + datetime.timedelta(minutes=i)).time()].append(
+                    curr_guard
+                )
 
     return occupancy
 
@@ -69,7 +73,9 @@ def solution_part_one(arg):
             minutes_asleep[i].append(k)
 
     sleepiest_guard = max(minutes_asleep.items(), key=lambda x: len(x[1]))[0]
-    sleepiest_minute = max([(len([i for i in v if i == sleepiest_guard]), k) for k, v in occupancy.items()])[1].minute
+    sleepiest_minute = max(
+        [(len([i for i in v if i == sleepiest_guard]), k) for k, v in occupancy.items()]
+    )[1].minute
 
     return sleepiest_guard * sleepiest_minute
 
@@ -78,15 +84,21 @@ def solution_part_two(arg):
     logs = parse_logs(arg)
     occupancy = get_occupancy(logs)
 
+    sleepiest_guard_by_minute = [
+        (
+            k,
+            max(
+                [
+                    (len(list(group)), group_key)
+                    for group_key, group in groupby(sorted(v))
+                ]
+            ),
+        )
+        for k, v in occupancy.items()
+    ]
     sleepiest_minute, sleepiest_guard = max(
-        [
-            (k, max([(len(list(group)), group_key) for group_key, group in groupby(v)]))
-            for k, v
-            in occupancy.items()
-        ],
-        key=lambda x: x[1],
+        sleepiest_guard_by_minute, key=lambda x: x[1]
     )
-
     return sleepiest_guard[1] * sleepiest_minute.minute
 
 
